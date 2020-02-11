@@ -5,6 +5,13 @@
         <div>购物街</div>
       </template>
     </nav-bar>
+    <tag-card
+      :titles="['流行', '新款', '精选']"
+      @tagClick="tagClick"
+      ref="tagCard1"
+      :class="{ tagCard: tagIsFiexd }"
+      v-show="tagIsFiexd"
+    />
     <scroll
       :pullUpLoad="true"
       :probeType="3"
@@ -13,13 +20,13 @@
       ref="scroll"
       class="content"
     >
-      <home-swiper :bannerlist="bannerList" />
+      <home-swiper :bannerlist="bannerList" @swiperimg="swiperimg" />
       <home-recommend :recommends="recommendList" />
       <week-recommend />
       <tag-card
         :titles="['流行', '新款', '精选']"
         @tagClick="tagClick"
-        class="tag-card"
+        ref="tagCard2"
       />
       <goods-list :goodslist="showgoods" />
     </scroll>
@@ -41,6 +48,8 @@ import WeekRecommend from "./childComponents/WeekRec";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
 
+// import {debounce} from 'common/utils/debounce';
+
 export default {
   name: "Home",
   data() {
@@ -53,7 +62,9 @@ export default {
         sell: { page: 0, list: [] }
       },
       goodsType: "pop",
-      isShow: null
+      isShow: null,
+      tagOffsetTop: 0,
+      tagIsFiexd: false
     };
   },
   components: {
@@ -76,22 +87,13 @@ export default {
   },
   mounted() {
     // 图片加载刷新
-    const refresh = this.debounce(this.$refs.scroll.refresh)
-    this.$bus.$on('itemload', () => {
-      refresh()
-    })
+    // const refresh = debounce(this.$refs.scroll.refresh)
+    this.$bus.$on("itemload", () => {
+      this.$refs.scroll.refresh();
+      // refresh()
+    });
   },
   methods: {
-    //防抖函数
-    debounce(fnc, wait=200) {
-      let timer = null
-     return function(...args) {
-       if(timer) clearTimeout(timer)
-       timer = setTimeout(() => {
-         fnc.applay(this,args)
-       },wait)
-     }
-    },
     /**
      * 监听事件相关方法
      **/
@@ -110,19 +112,22 @@ export default {
           this.goodsType = "pop";
           break;
       }
+      this.$refs.tagCard1.count = index
+      this.$refs.tagCard2.count = index
+      this.$refs.scroll.scrollTo(0, -this.tagOffsetTop, 0)
     },
     backClick() {
       this.$refs.scroll.scrollTo(0, 0);
     },
     scroll(position) {
       this.isShow = Math.abs(position.y) > 1000;
+      this.tagIsFiexd = Math.abs(position.y) > this.tagOffsetTop;
     },
     pullingUp() {
       this.getHomeGoods(this.goodsType);
-      setTimeout(() => {
-        
-        
-      }, 3000);
+    },
+    swiperimg() {
+      this.tagOffsetTop = this.$refs.tagCard2.$el.offsetTop;
     },
 
     /**
@@ -140,7 +145,7 @@ export default {
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page = page;
 
-        this.$refs.scroll.finishPullUp()
+        this.$refs.scroll.finishPullUp();
       });
     }
   },
@@ -161,11 +166,6 @@ export default {
   background-color: var(--color-tint);
   color: #fff;
   font-size: large;
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  z-index: 100;
 }
 .content {
   position: absolute;
@@ -175,13 +175,13 @@ export default {
   right: 0;
   overflow: hidden;
 }
-.tag-card {
-  position: sticky;
-  top: 44px;
-}
 .back {
   position: absolute;
   bottom: 50px;
   right: 10px;
+}
+.tagCard {
+  position: relative;
+  z-index: 100;
 }
 </style>

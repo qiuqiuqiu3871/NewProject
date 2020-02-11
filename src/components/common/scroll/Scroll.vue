@@ -43,7 +43,7 @@ export default {
       this.iscroll && this.iscroll.scrollTo(x, y, time);
     },
     finishPullUp() {
-      this.iscroll.finishPullUp();
+      this.iscroll && this.iscroll.finishPullUp();
     },
     refresh() {
       this.iscroll && this.iscroll.refresh()
