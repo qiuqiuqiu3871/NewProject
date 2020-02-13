@@ -14,8 +14,12 @@ export function normalRequest(config) {
     // return
   })
   // 2.2响应拦截
-  instance.interceptors.response.use(config => {
-    return config.data
+  instance.interceptors.response.use(conf => {
+    if (conf.status!== 200) {
+      spareRequest(config)
+    } else {
+      return conf.data
+    }
   }, err => {
     // return
   })
@@ -23,7 +27,7 @@ export function normalRequest(config) {
   return instance(config)
 }
 // 备用地址
-export function spareRequestTwo(config) {
+export function spareRequest(config) {
   const Instance = axios.create({
     baseURL: 'http://106.54.54.237:8000/api/hy'
   })

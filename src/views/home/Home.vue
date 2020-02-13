@@ -6,7 +6,6 @@
       </template>
     </nav-bar>
     <tag-card
-      :titles="['流行', '新款', '精选']"
       @tagClick="tagClick"
       ref="tagCard1"
       :class="{ tagCard: tagIsFiexd }"

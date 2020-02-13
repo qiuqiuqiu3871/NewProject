@@ -23,6 +23,7 @@
     display: flex;
     height: 44px;
     line-height: 44px;
+    box-shadow: 0 1px 1px rgb(233, 232, 232)
   }
   .navbar-left, .navbar-right{
     width: 60px;

@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-list-item">
+  <div class="goods-list-item" @click="itemClick(goodslistitem.iid)">
     <img :src="goodslistitem.show.img" alt="" @load="itemload" />
     <div class="goods-info">
       <p>{{ goodslistitem.title }}</p>
@@ -23,6 +23,9 @@ export default {
   methods: {
     itemload() {
       this.$bus.$emit('itemload')
+    },
+    itemClick(iid) {
+      this.$router.push({path: 'detail', query: {iid: iid}})
     }
   },
 };

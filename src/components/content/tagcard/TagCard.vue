@@ -16,16 +16,9 @@ export default {
   name: "TagCard",
   data() {
     return {
-      count: 0
+      count: 0,
+      titles: ['流行', '新款', '精选']
     };
-  },
-  props: {
-    titles: {
-      type: Array,
-      default() {
-        return [];
-      }
-    }
   },
   methods: {
     itemClick(index) {

@@ -5,7 +5,7 @@
       :key="item.title"
       class="swiper-item"
     >
-      <a :href="item.link" class="">
+      <a :href="item.link" >
         <img :src="item.image" alt="" @load="swiperimg" />
       </a>
     </van-swipe-item>
