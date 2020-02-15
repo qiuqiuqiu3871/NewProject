@@ -1,10 +1,10 @@
 <template>
   <div class="goodslist">
-    <goods-list-item
-      v-for="item in goodslist"
-      :key="item.shopid"
-      :goodslistitem="item"
-    />
+      <goods-list-item
+        v-for="item in goodslist"
+        :key="item.shopid"
+        :goodslistitem="item"
+      />
   </div>
 </template>
 

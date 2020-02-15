@@ -9,6 +9,12 @@ import { normalRequest } from './axios-request'
    })
  }
  
+ export function getRecommend() {
+   return normalRequest({
+     url:'/recommend'
+   })
+ }
+ 
  export class Goods {
    constructor(itemInfo, columns, services) {
      this.title = itemInfo.title,
@@ -29,5 +35,12 @@ import { normalRequest } from './axios-request'
      this.cGoods = shopInfo.cGoods,
      this.cSells = (shopInfo.cSells/10000).toFixed(1),
      this.score = shopInfo.score
+   }
+ }
+
+ export class Info {
+   constructor(detailInfo) {
+     this.desc = detailInfo.desc,
+     this.imagesList = detailInfo.detailImage[0].list
    }
  }

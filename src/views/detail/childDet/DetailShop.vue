@@ -1,7 +1,7 @@
 <template>
-  <div class="detailshop">
+  <div v-if="Object.keys(detailShop).length !==0" class="detailshop">
     <div class="shop-logo">
-      <img :src="detailShop.logo" alt="" />
+      <img v-lazy="detailShop.logo" alt="" />
       <span>{{ detailShop.name }}</span>
     </div>
     <div class="shop-evaluate">

@@ -1,27 +1,10 @@
 <template>
-  <div v-if="Object.keys(detailGoods).length !== 0" class="detail-info">
-    <div class="info-title">{{ detailGoods.title }}</div>
-    <div class="info-price">
-      <span>{{ detailGoods.price }}</span>
-      <span>{{ detailGoods.oldPrice }}</span>
-      <span
-        v-show="detailGoods.discountDesc"
-        :style="{ backgroundColor: detailGoods.discountBgColor }"
-        class="discount"
-      >
-        {{ detailGoods.discountDesc }}
-      </span>
+  <div v-if="Object.keys(detailInfo)" class="detailinfo">
+    <div class="info-desc">
+      {{ detailInfo.desc }}
     </div>
-    <div class="info-columns">
-      <span v-for="item in detailGoods.columns" :key="item">
-        {{ item }}
-      </span>
-    </div>
-    <div class="info-services">
-      <span v-for="item in detailGoods.services" :key="item.name">
-        <img :src="item.icon" alt="" />
-        {{ item.name }}
-      </span>
+    <div class="info-image" v-for="item in detailInfo.imagesList" :key="item" >
+      <img v-lazy="item" alt="" @load="infoimgLoad"/>
     </div>
   </div>
 </template>
@@ -30,57 +13,39 @@
 export default {
   name: "DetailInfo",
   props: {
-    detailGoods: {
+    detailInfo: {
       type: Object,
       default() {
         return {};
       }
     }
-  }
+  },
+  methods: {
+    infoimgLoad() {
+      this.$emit('infoimgLoad')
+    }
+  },
 };
 </script>
 <style scoped>
-.detail-info {
+.detailinfo {
+  padding: 10px 0;
+  border-bottom: 5px solid #f2f5f8;
+}
+.info-desc {
   font-size: 14px;
-  border-bottom: 5px solid #eee
-}
-.info-title {
-  color: #000;
-  font-size: 20;
-  padding: 15px 10px;
-}
-.info-price span:nth-child(1) {
-  color: var(--color-high-text);
-  font-size: 24px;
-  margin: 0 10px;
-}
-.info-price span:nth-child(2) {
-  font-size: 13px;
-  text-decoration: line-through;
-  margin-right: 5px;
-}
-.discount {
-  color: #fff;
-  border-radius: 10px;
-  font-size: 12px;
-  padding: 2px 5px;
+  padding: 20px 10px;
   position: relative;
-  top: -10px;
 }
-.info-columns {
-  display: flex;
-  justify-content: space-around;
-  margin: 10px 0;
-  font-size: 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
+.info-desc ::before {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background-color: #333;
+  bottom: 0;
 }
-.info-services img {
-  width: 13px;
-}
-.info-services {
-  display: flex;
-  justify-content: space-around;
-  padding: 10px 0
+.info-image img {
+  width: 100%;
 }
 </style>

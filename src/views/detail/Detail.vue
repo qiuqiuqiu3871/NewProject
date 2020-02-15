@@ -1,10 +1,14 @@
 <template>
   <div class="detail">
-    <detail-bar />
-    <scroll :pullUpLoad="true" :probeType="3" class="countent">
+    <detail-bar :changtype='changetype'/>
+    <scroll class="countent" ref="scroll" :probeType='3' @scroll='scroll'>
       <detail-swiper :topImages="topImages" />
-      <detail-info :detailGoods="detailGoods" />
+      <detail-goods :detailGoods="detailGoods" />
       <detail-shop :detailShop="detailShop" />
+      <detail-info :detailInfo="detailInfo" @infoimgLoad="infoimgLoad" />
+      <detail-params :detail-params="detailParams" ref="params" />
+      <detail-rate :detail-rate="detailRate" ref="rate"/>
+      <detail-recommend :detail-recommend="detailRecommend" ref="recommend"/>
     </scroll>
   </div>
 </template>
@@ -12,12 +16,16 @@
 <script>
 import DetailBar from "./childDet/DetailBar";
 import DetailSwiper from "./childDet/DetailSwiper";
-import DetailInfo from "./childDet/DetailInfo";
+import DetailGoods from "./childDet/DetailGoods";
 import DetailShop from "./childDet/DetailShop";
+import DetailInfo from "./childDet/DetailInfo";
+import DetailParams from "./childDet/DetailParams";
+import DetailRate from "./childDet/DetailRate";
+import DetailRecommend from "./childDet/DetailRecommend";
 
 import Scroll from "components/common/scroll/Scroll";
 
-import { getDetail, Goods, Shop } from "network/detail";
+import { getDetail, Goods, Shop, Info, getRecommend } from "network/detail";
 
 export default {
   name: "Detail",
@@ -26,25 +34,50 @@ export default {
       iid: 0,
       topImages: [],
       detailGoods: {},
-      detailShop: {}
+      detailShop: {},
+      detailInfo: {},
+      detailParams: {},
+      detailRate: {},
+      detailRecommend: {},
+      changetype: 0
     };
+  },
+  components: {
+    DetailBar,
+    DetailSwiper,
+    DetailGoods,
+    DetailShop,
+    DetailInfo,
+    DetailParams,
+    DetailRate,
+    DetailRecommend,
+    Scroll
   },
   created() {
     this.iid = this.$route.query.iid;
     //获取detail数据
     this.getDetail(this.iid);
+
+    // 获取Recommend数据
+    this.getRecommend();
   },
-  components: {
-    DetailBar,
-    DetailSwiper,
-    DetailInfo,
-    DetailShop,
-    Scroll
+  mounted() {
+    console.log(this.$refs.params.$el.offsetTop)
+    console.log(this.$refs.rate.$el.offsetTop)
+    console.log(this.$refs.recommend.$el.offsetTop)
+    
   },
   methods: {
     /*
     事件监听相关方法
     **/
+    infoimgLoad() {
+      this.$refs.scroll.refresh();
+    },
+    scroll(position){
+      this.changetype = Math.abs(position.y)
+      // console.log(position.y)
+    },
 
     /*
     网络请求
@@ -52,14 +85,34 @@ export default {
     getDetail(iid) {
       getDetail(iid).then(res => {
         const data = res.result;
-        console.log(data);
+        // 获取所有数据进行转换
         const columns = data.columns;
         const services = data.shopInfo.services;
         columns[2] = services[services.length - 1].name;
         services.splice(services.length - 1, 1);
+
+        // 1.商品轮播图片
         this.topImages = data.itemInfo.topImages;
+
+        // 2. 获取商品基本信息
         this.detailGoods = new Goods(data.itemInfo, columns, services);
+
+        // 3. 获取店铺及评价信息
         this.detailShop = new Shop(data.shopInfo);
+
+        // 4.获取商品展示信息
+        this.detailInfo = new Info(data.detailInfo);
+
+        // 5.获取商品参数信息
+        this.detailParams = data.itemParams;
+
+        // 6.获取买家评论信息
+        this.detailRate = data.rate;
+      });
+    },
+    getRecommend() {
+      getRecommend().then(res => {
+        this.detailRecommend = res.data;
       });
     }
   }
