@@ -53,7 +53,6 @@ export default {
 <style scoped>
 .detailrate {
   border-top: 5px solid #f2f5f8;
-  border-bottom: 5px solid #f2f5f8;
 }
 .rate-comment {
   display: flex;
@@ -72,6 +71,7 @@ export default {
   padding: 10px 20px;
 }
 .item-content span:nth-child(2) {
+  display: block;
   color: var(--color-high-text);
   border-top: 2px solid #f2f5f8;
 }

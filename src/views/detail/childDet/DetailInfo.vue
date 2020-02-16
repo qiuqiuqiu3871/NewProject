@@ -4,7 +4,7 @@
       {{ detailInfo.desc }}
     </div>
     <div class="info-image" v-for="item in detailInfo.imagesList" :key="item" >
-      <img v-lazy="item" alt="" @load="infoimgLoad"/>
+      <img :src="item" alt="" @load="infoimgLoad"/>
     </div>
   </div>
 </template>
@@ -30,7 +30,6 @@ export default {
 <style scoped>
 .detailinfo {
   padding: 10px 0;
-  border-bottom: 5px solid #f2f5f8;
 }
 .info-desc {
   font-size: 14px;

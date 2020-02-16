@@ -47,7 +47,7 @@ import WeekRecommend from "./childComponents/WeekRec";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
 
-// import {debounce} from 'common/utils/debounce';
+import {debounce} from 'common/utils/debounce';
 
 export default {
   name: "Home",
@@ -86,10 +86,10 @@ export default {
   },
   mounted() {
     // 图片加载刷新
-    // const refresh = debounce(this.$refs.scroll.refresh)
+    const refresh = debounce(this.$refs.scroll.refresh)
     this.$bus.$on("itemload", () => {
-      this.$refs.scroll.refresh();
-      // refresh()
+      // this.$refs.scroll.refresh();
+      refresh()
     });
   },
   methods: {

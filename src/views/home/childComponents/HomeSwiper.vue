@@ -6,7 +6,7 @@
       class="swiper-item"
     >
       <a :href="item.link" >
-        <img v-lazy="item.image" alt="" @load="swiperimg" />
+        <img :src="item.image" alt="" @load="swiperimg" />
       </a>
     </van-swipe-item>
   </van-swipe>

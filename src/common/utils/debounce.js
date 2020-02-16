@@ -3,7 +3,7 @@ export function debounce(fnc, wait = 200) {
   return function (...args) {
     if (timer) clearTimeout(timer)
     timer = setTimeout(() => {
-      fnc.applay(this, args)
+      fnc.apply(this, args)
     }, wait)
   }
 }

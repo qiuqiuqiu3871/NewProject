@@ -5,7 +5,7 @@
       <p>{{ detailParams.rule.disclaimer }}</p>
       <table>
         <tr v-for="(item, index) in detailParams.rule.tables[0]" :key="index">
-          <td v-for="v in item" :key="v">{{ v }}</td>
+          <td v-for="(v, i) in item" :key="i+'v'">{{ v }}</td>
         </tr>
       </table>
     </div>
@@ -45,6 +45,7 @@ export default {
 <style scoped>
 .detailparams {
   font-size: 14px;
+  border-top: 5px solid #f2f5f8;
 }
 .params-rule h3 {
   padding: 10px 0;

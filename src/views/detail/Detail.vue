@@ -1,14 +1,14 @@
 <template>
   <div class="detail">
-    <detail-bar :changtype='changetype'/>
-    <scroll class="countent" ref="scroll" :probeType='3' @scroll='scroll'>
+    <detail-bar @barClick="barClick" ref="bar" />
+    <scroll class="countent" ref="scroll" :probeType="3" @scroll="detailScroll">
       <detail-swiper :topImages="topImages" />
       <detail-goods :detailGoods="detailGoods" />
       <detail-shop :detailShop="detailShop" />
       <detail-info :detailInfo="detailInfo" @infoimgLoad="infoimgLoad" />
       <detail-params :detail-params="detailParams" ref="params" />
-      <detail-rate :detail-rate="detailRate" ref="rate"/>
-      <detail-recommend :detail-recommend="detailRecommend" ref="recommend"/>
+      <detail-rate :detail-rate="detailRate" ref="rate" />
+      <detail-recommend :detail-recommend="detailRecommend" ref="recommend" />
     </scroll>
   </div>
 </template>
@@ -27,6 +27,8 @@ import Scroll from "components/common/scroll/Scroll";
 
 import { getDetail, Goods, Shop, Info, getRecommend } from "network/detail";
 
+import { debounce } from "common/utils/debounce";
+
 export default {
   name: "Detail",
   data() {
@@ -39,7 +41,9 @@ export default {
       detailParams: {},
       detailRate: {},
       detailRecommend: {},
-      changetype: 0
+      barCoutent: [],
+      getimgLoad: null,
+      countIndex: 0
     };
   },
   components: {
@@ -60,12 +64,16 @@ export default {
 
     // 获取Recommend数据
     this.getRecommend();
-  },
-  mounted() {
-    console.log(this.$refs.params.$el.offsetTop)
-    console.log(this.$refs.rate.$el.offsetTop)
-    console.log(this.$refs.recommend.$el.offsetTop)
-    
+
+    //优化
+    this.getimgLoad = debounce(() => {
+      this.barCoutent = [];
+      this.barCoutent.push(0);
+      this.barCoutent.push(this.$refs.params.$el.offsetTop);
+      this.barCoutent.push(this.$refs.rate.$el.offsetTop);
+      this.barCoutent.push(this.$refs.recommend.$el.offsetTop);
+      this.barCoutent.push(Number.MAX_VALUE);
+    }, 1000);
   },
   methods: {
     /*
@@ -73,10 +81,22 @@ export default {
     **/
     infoimgLoad() {
       this.$refs.scroll.refresh();
+      //利用防抖函数减少图片持续加载
+      this.getimgLoad();
     },
-    scroll(position){
-      this.changetype = Math.abs(position.y)
-      // console.log(position.y)
+    barClick(index) {
+      this.$refs.scroll.scrollTo(0, -this.barCoutent[index], 200);
+    },
+    detailScroll(position) {
+      let positionY = Math.abs(position.y);
+      for (let i = 0; i < this.barCoutent.length - 1; i++) {
+        if (
+          this.countIndex !== i &&
+          (positionY > this.barCoutent[i] && positionY < this.barCoutent[i + 1])
+        ) {
+          this.$refs.bar.count = this.countIndex = i;
+        }
+      }
     },
 
     /*

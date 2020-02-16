@@ -29,12 +29,6 @@ export default {
   components: {
     NavBar
   },
-  props: {
-    changetype: {
-      type: Number,
-      default: 0
-    }
-  },
   data() {
     return {
       titles: ["商品", "参数", "评论", "推荐"],
@@ -44,16 +38,12 @@ export default {
   methods: {
     itemClick(index) {
       this.count = index;
+      this.$emit('barClick',index)
     },
     imgClick() {
       this.$router.back();
     }
   },
-  computed: {
-    chang() {
-      console.log(this.changtype)
-    }
-  }
 };
 </script>
 <style scoped>

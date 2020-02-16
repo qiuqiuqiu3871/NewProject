@@ -32,6 +32,9 @@ export default {
 };
 </script>
 <style scoped>
+.detailrecommend {
+  border-top: 5px solid #f2f5f8;
+}
 .detailrecommend h3{
   padding: 20px 10px;
   text-align: center;
