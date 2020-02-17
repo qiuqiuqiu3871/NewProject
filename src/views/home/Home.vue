@@ -39,7 +39,6 @@ import Scroll from "components/common/scroll/Scroll";
 
 import TagCard from "components/content/tagcard/TagCard";
 import GoodsList from "components/content/goods/GoodsList";
-import BackTop from "components/content/backtop/BackTop";
 
 import HomeSwiper from "./childComponents/HomeSwiper";
 import HomeRecommend from "./childComponents/HomeRecommend";
@@ -47,7 +46,8 @@ import WeekRecommend from "./childComponents/WeekRec";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
 
-import {debounce} from 'common/utils/debounce';
+import { debounce } from "common/utils/debounce";
+import { backTopMiXin } from "common/utils/backTop";
 
 export default {
   name: "Home",
@@ -61,7 +61,6 @@ export default {
         sell: { page: 0, list: [] }
       },
       goodsType: "pop",
-      isShow: null,
       tagOffsetTop: 0,
       tagIsFiexd: false
     };
@@ -71,11 +70,11 @@ export default {
     Scroll,
     TagCard,
     GoodsList,
-    BackTop,
     HomeSwiper,
     HomeRecommend,
     WeekRecommend
   },
+  mixins: [backTopMiXin],
   created() {
     //获取multidata数据
     this.getHomeMultidata();
@@ -86,10 +85,10 @@ export default {
   },
   mounted() {
     // 图片加载刷新
-    const refresh = debounce(this.$refs.scroll.refresh)
+    const refresh = debounce(this.$refs.scroll.refresh);
     this.$bus.$on("itemload", () => {
       // this.$refs.scroll.refresh();
-      refresh()
+      refresh();
     });
   },
   methods: {
@@ -111,12 +110,9 @@ export default {
           this.goodsType = "pop";
           break;
       }
-      this.$refs.tagCard1.count = index
-      this.$refs.tagCard2.count = index
-      this.$refs.scroll.scrollTo(0, -this.tagOffsetTop, 0)
-    },
-    backClick() {
-      this.$refs.scroll.scrollTo(0, 0);
+      this.$refs.tagCard1.count = index;
+      this.$refs.tagCard2.count = index;
+      this.$refs.scroll.scrollTo(0, -this.tagOffsetTop, 0);
     },
     scroll(position) {
       this.isShow = Math.abs(position.y) > 1000;

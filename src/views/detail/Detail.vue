@@ -10,6 +10,8 @@
       <detail-rate :detail-rate="detailRate" ref="rate" />
       <detail-recommend :detail-recommend="detailRecommend" ref="recommend" />
     </scroll>
+    <detail-bottom  class="detail-bottom" @addToCart='addToCart' />
+    <back-top @click.native="backClick" class="back" v-show="isShow" />
   </div>
 </template>
 
@@ -22,12 +24,14 @@ import DetailInfo from "./childDet/DetailInfo";
 import DetailParams from "./childDet/DetailParams";
 import DetailRate from "./childDet/DetailRate";
 import DetailRecommend from "./childDet/DetailRecommend";
+import DetailBottom from "./childDet/DetailBottom";
 
 import Scroll from "components/common/scroll/Scroll";
 
 import { getDetail, Goods, Shop, Info, getRecommend } from "network/detail";
 
 import { debounce } from "common/utils/debounce";
+import { backTopMiXin } from "common/utils/backTop";
 
 export default {
   name: "Detail",
@@ -55,8 +59,10 @@ export default {
     DetailParams,
     DetailRate,
     DetailRecommend,
-    Scroll
+    DetailBottom,
+    Scroll,
   },
+  mixins: [backTopMiXin],
   created() {
     this.iid = this.$route.query.iid;
     //获取detail数据
@@ -97,6 +103,18 @@ export default {
           this.$refs.bar.count = this.countIndex = i;
         }
       }
+      // 显示backTop
+      this.isShow = Math.abs(position.y) > 1000;
+    },
+    addToCart() {
+      console.log('加入购物车')
+      const goodsObj = {}
+      goodsObj.image = this.topImages[0]
+      goodsObj.title = this.detailGoods.title
+      goodsObj.desc = this.detailGoods.desc
+      goodsObj.price = this.detailGoods.lowNowPrice
+
+      console.log(goodsObj)
     },
 
     /*
@@ -150,5 +168,20 @@ export default {
   left: 0;
   right: 0;
   overflow: hidden;
+}
+.detail-bottom {
+  display: flex;
+  position: fixed;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background-color: #fff;
+  z-index: 1000;
+}
+.back {
+  position: absolute;
+  bottom: 50px;
+  right: 10px;
 }
 </style>

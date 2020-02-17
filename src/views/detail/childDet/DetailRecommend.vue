@@ -34,9 +34,10 @@ export default {
 <style scoped>
 .detailrecommend {
   border-top: 5px solid #f2f5f8;
+  padding: 10px 0 20px;
 }
 .detailrecommend h3{
-  padding: 20px 10px;
+  padding: 10px;
   text-align: center;
 }
 .recommend-item {
