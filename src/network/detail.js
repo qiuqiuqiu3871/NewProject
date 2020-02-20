@@ -21,7 +21,7 @@ import { normalRequest } from './axios-request'
      this.desc = itemInfo.desc
      this.discountBgColor = itemInfo.discountBgColor,
      this.discountDesc = itemInfo.discountDesc
-     this.lowNowPrice = '¥'+itemInfo.lowNowPrice
+     this.lowNowPrice = itemInfo.lowNowPrice
      this.price = itemInfo.price
      this.oldPrice = itemInfo.oldPrice
      this.columns = columns,

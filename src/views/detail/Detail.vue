@@ -2,6 +2,7 @@
   <div class="detail">
     <detail-bar @barClick="barClick" ref="bar" />
     <scroll class="countent" ref="scroll" :probeType="3" @scroll="detailScroll">
+      <!-- <div>{{$store.state.cartlist}}</div> -->
       <detail-swiper :topImages="topImages" />
       <detail-goods :detailGoods="detailGoods" />
       <detail-shop :detailShop="detailShop" />
@@ -107,14 +108,14 @@ export default {
       this.isShow = Math.abs(position.y) > 1000;
     },
     addToCart() {
-      console.log('加入购物车')
-      const goodsObj = {}
-      goodsObj.image = this.topImages[0]
-      goodsObj.title = this.detailGoods.title
-      goodsObj.desc = this.detailGoods.desc
-      goodsObj.price = this.detailGoods.lowNowPrice
-
-      console.log(goodsObj)
+      const cart = {}
+      cart.image = this.topImages[0]
+      cart.title = this.detailGoods.title
+      cart.desc = this.detailGoods.desc
+      cart.price = this.detailGoods.lowNowPrice
+      cart.iid = this.iid
+      this.$store.dispatch('addCart', cart)
+      // console.log(cart)
     },
 
     /*
