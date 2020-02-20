@@ -34,6 +34,8 @@ import { getDetail, Goods, Shop, Info, getRecommend } from "network/detail";
 import { debounce } from "common/utils/debounce";
 import { backTopMiXin } from "common/utils/backTop";
 
+import {mapActions} from 'vuex'
+
 export default {
   name: "Detail",
   data() {
@@ -83,6 +85,7 @@ export default {
     }, 1000);
   },
   methods: {
+    ...mapActions(['addCart']),
     /*
     事件监听相关方法
     **/
@@ -114,7 +117,9 @@ export default {
       cart.desc = this.detailGoods.desc
       cart.price = this.detailGoods.lowNowPrice
       cart.iid = this.iid
-      this.$store.dispatch('addCart', cart)
+      this.addCart(cart).then(res => {
+        this.$toast.show(res)
+      })
       // console.log(cart)
     },
 
